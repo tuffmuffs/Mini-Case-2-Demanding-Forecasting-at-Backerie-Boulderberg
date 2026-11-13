@@ -42,15 +42,15 @@ st.markdown(
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&display=swap');
 
         :root {
-            --paper: #F7F4EE;
-            --card: #FFFFFF;
-            --ink: #1D252B;
-            --muted: #65727A;
-            --navy: #18364A;
-            --teal: #1F7A75;
-            --orange: #C56A45;
-            --gold: #D9A441;
-            --line: #E6E0D7;
+            --paper: #0F1720;
+            --card: #182432;
+            --ink: #F4F7F9;
+            --muted: #BAC5CF;
+            --navy: #16364A;
+            --teal: #48B9AE;
+            --orange: #F08A68;
+            --gold: #F0C56A;
+            --line: #334657;
         }
 
         html, body, [class*="css"] {
@@ -70,17 +70,17 @@ st.markdown(
 
         h1, h2, h3 {
             font-family: "Source Serif 4", Georgia, serif;
-            color: var(--navy);
+            color: var(--ink);
             letter-spacing: -0.02em;
         }
 
         .hero {
-            background: var(--navy);
+            background: #16364A;
             color: white;
             padding: 2.4rem 2.7rem 2.2rem 2.7rem;
             border-radius: 20px;
             margin-bottom: 1.3rem;
-            box-shadow: 0 14px 36px rgba(24, 54, 74, 0.14);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
         }
 
         .hero .eyebrow {
@@ -126,18 +126,18 @@ st.markdown(
         }
 
         [data-testid="stVerticalBlockBorderWrapper"] {
-            background: rgba(255,255,255,0.82);
+            background: #182432;
             border: 1px solid var(--line) !important;
             border-radius: 16px;
-            box-shadow: 0 7px 22px rgba(24,54,74,0.045);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.20);
         }
 
         [data-testid="stMetric"] {
-            background: #FFFFFF;
+            background: #1B2A39;
             border: 1px solid var(--line);
             border-radius: 15px;
             padding: 1.05rem 1.15rem;
-            box-shadow: 0 6px 18px rgba(24,54,74,0.04);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.18);
         }
 
         [data-testid="stMetricLabel"] {
@@ -146,7 +146,7 @@ st.markdown(
         }
 
         [data-testid="stMetricValue"] {
-            color: var(--navy);
+            color: #FFFFFF;
             font-family: "Source Serif 4", Georgia, serif;
         }
 
@@ -160,18 +160,18 @@ st.markdown(
         }
 
         .callout {
-            background: #EDF6F4;
+            background: #15393A;
             border-left: 4px solid var(--teal);
             border-radius: 8px 14px 14px 8px;
             padding: 1rem 1.2rem;
-            color: #284541;
+            color: #E3F7F4;
             margin: 0.4rem 0 1rem 0;
         }
 
         .warning-callout {
-            background: #FFF7E8;
+            background: #3A3021;
             border-left-color: var(--gold);
-            color: #594520;
+            color: #FBE9B8;
         }
 
         .timeline-grid {
@@ -182,7 +182,7 @@ st.markdown(
         }
 
         .timeline-card {
-            background: white;
+            background: #182432;
             border: 1px solid var(--line);
             border-radius: 14px;
             padding: 1rem;
@@ -218,6 +218,21 @@ st.markdown(
 
         div[data-testid="stTabs"] button {
             font-weight: 650;
+            color: var(--muted);
+        }
+
+        div[data-testid="stTabs"] button[aria-selected="true"] {
+            color: var(--orange);
+        }
+
+        [data-testid="stCaptionContainer"],
+        [data-testid="stWidgetLabel"] {
+            color: var(--muted);
+        }
+
+        [data-testid="stExpander"] {
+            background: #182432;
+            border-color: var(--line);
         }
 
         @media (max-width: 900px) {
@@ -320,7 +335,7 @@ def forecast_chart(frame: pd.DataFrame, show_interval: bool) -> go.Figure:
     figure.update_layout(
         height=515,
         margin=dict(l=10, r=10, t=22, b=10),
-        paper_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="#FFFFFF",
         plot_bgcolor="#FFFFFF",
         hovermode="x unified",
         legend=dict(
@@ -375,7 +390,7 @@ def metric_comparison_chart(baseline: dict, final: dict) -> go.Figure:
         barmode="group",
         height=320,
         margin=dict(l=10, r=10, t=20, b=10),
-        paper_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="#FFFFFF",
         plot_bgcolor="#FFFFFF",
         yaxis=dict(title="Forecast error (units)", gridcolor="#ECE7DF"),
         xaxis=dict(title=None),
@@ -401,7 +416,7 @@ def residual_histogram(diagnostics: pd.DataFrame) -> go.Figure:
     figure.update_layout(
         height=360,
         margin=dict(l=10, r=10, t=20, b=10),
-        paper_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="#FFFFFF",
         plot_bgcolor="#FFFFFF",
         xaxis_title="Residual in log(1 + sales)",
         yaxis_title="Days × stores",
@@ -412,7 +427,7 @@ def residual_histogram(diagnostics: pd.DataFrame) -> go.Figure:
 
 
 def residual_scatter(diagnostics: pd.DataFrame) -> go.Figure:
-    """Build a browser-compatible residual-versus-fitted chart."""
+    """Build a browser-compatible residual-versus-fitted diagnostic chart."""
 
     plot_data = diagnostics.sample(
         n=min(5_000, len(diagnostics)),
@@ -425,30 +440,19 @@ def residual_scatter(diagnostics: pd.DataFrame) -> go.Figure:
             y=plot_data["residual_log_sales"],
             mode="markers",
             marker=dict(color=ORANGE, size=4, opacity=0.25),
-            hovertemplate=(
-                "Fitted: %{x:.3f}<br>"
-                "Residual: %{y:.3f}<extra></extra>"
-            ),
+            hovertemplate="Fitted: %{x:.3f}<br>Residual: %{y:.3f}<extra></extra>",
         )
     )
-
-    figure.add_hline(
-        y=0,
-        line_width=2,
-        line_dash="dash",
-        line_color=NAVY,
-    )
-
+    figure.add_hline(y=0, line_width=2, line_dash="dash", line_color=NAVY)
     figure.update_layout(
         height=360,
         margin=dict(l=10, r=10, t=20, b=10),
-        paper_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="#FFFFFF",
         plot_bgcolor="#FFFFFF",
         xaxis_title="Fitted log(1 + sales)",
         yaxis_title="Residual in log(1 + sales)",
         font=dict(family="DM Sans, Arial", color=INK),
     )
-
     return figure
 
 
@@ -472,7 +476,7 @@ def driver_chart(driver_changes: pd.DataFrame) -> go.Figure:
     figure.update_layout(
         height=340,
         margin=dict(l=10, r=55, t=20, b=10),
-        paper_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="#FFFFFF",
         plot_bgcolor="#FFFFFF",
         xaxis=dict(title="Modeled change in daily sales", ticksuffix="%", gridcolor="#ECE7DF"),
         yaxis=dict(title=None, autorange="reversed"),
