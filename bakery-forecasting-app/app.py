@@ -412,18 +412,33 @@ def residual_histogram(diagnostics: pd.DataFrame) -> go.Figure:
 
 
 def residual_scatter(diagnostics: pd.DataFrame) -> go.Figure:
-    """Build the required residual-versus-fitted diagnostic chart."""
+    """Build a browser-compatible residual-versus-fitted chart."""
+
+    plot_data = diagnostics.sample(
+        n=min(5_000, len(diagnostics)),
+        random_state=5415,
+    )
 
     figure = go.Figure(
-        go.Scattergl(
-            x=diagnostics["fitted_log_sales"],
-            y=diagnostics["residual_log_sales"],
+        go.Scatter(
+            x=plot_data["fitted_log_sales"],
+            y=plot_data["residual_log_sales"],
             mode="markers",
             marker=dict(color=ORANGE, size=4, opacity=0.25),
-            hovertemplate="Fitted: %{x:.3f}<br>Residual: %{y:.3f}<extra></extra>",
+            hovertemplate=(
+                "Fitted: %{x:.3f}<br>"
+                "Residual: %{y:.3f}<extra></extra>"
+            ),
         )
     )
-    figure.add_hline(y=0, line_width=2, line_dash="dash", line_color=NAVY)
+
+    figure.add_hline(
+        y=0,
+        line_width=2,
+        line_dash="dash",
+        line_color=NAVY,
+    )
+
     figure.update_layout(
         height=360,
         margin=dict(l=10, r=10, t=20, b=10),
@@ -433,6 +448,7 @@ def residual_scatter(diagnostics: pd.DataFrame) -> go.Figure:
         yaxis_title="Residual in log(1 + sales)",
         font=dict(family="DM Sans, Arial", color=INK),
     )
+
     return figure
 
 
